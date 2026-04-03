@@ -9,3 +9,6 @@ node_modules/
 
 # Test
 db.txt
+
+# Generated coverage report
+coverage/
