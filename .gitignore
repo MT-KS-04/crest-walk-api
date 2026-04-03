@@ -1,0 +1,11 @@
+# Node modules
+node_modules/
+
+# Custom 
+.vscode
+
+# ENV file
+.env
+
+# Test
+db.txt
