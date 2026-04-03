@@ -58,18 +58,22 @@ crest-walk-api-JS/
 ## 💻 Cài đặt và Chạy Thử (Local Development)
 
 ### Bước 1: Clone dự án hoặc tải mã nguồn
+
 ```bash
 git clone <URL_REPO_CỦA_BẠN>
 cd crest-walk-api-JS
 ```
 
 ### Bước 2: Cài đặt Dependencies
+
 ```bash
 npm install
 ```
 
 ### Bước 3: Cấu hình Môi trường
+
 Tạo file `.env` (nếu chưa có) từ file mẫu hoặc điền các thông tin:
+
 ```env
 PORT=3000
 NODE_ENV=development
@@ -78,9 +82,11 @@ LOG_LEVELS=info
 ```
 
 ### Bước 4: Chạy Máy chủ ở Chế độ Development
+
 ```bash
 npm run dev
 ```
+
 > Server sẽ khởi động và tự động reload mỗi khi bạn thay đổi code. Bạn có thể truy cập API cơ bản tại: `http://localhost:3000/api/v1/`
 
 ---
@@ -88,6 +94,7 @@ npm run dev
 ## 📖 API Documentation Chú Thích
 
 Hiện tại Entry Point (`/api/v1/`) cung cấp phản hồi kiểm tra sức khỏe hệ thống (Health Check):
+
 ```json
 {
   "message": "API is live",
@@ -101,7 +108,8 @@ Hiện tại Entry Point (`/api/v1/`) cung cấp phản hồi kiểm tra sức k
   "timestamp": "2026-03-21T16:12:00.000Z"
 }
 ```
-*(Chi tiết các endpoint như `/users`, `/shoes`, `/orders` sẽ được cập nhật trong những đợt release tiếp theo!)*
+
+_(Chi tiết các endpoint như `/users`, `/shoes`, `/orders` sẽ được cập nhật trong những đợt release tiếp theo!)_
 
 ---
 
