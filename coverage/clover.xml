@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1775235327119" clover="3.2.0">
-  <project timestamp="1775235327119" name="All files">
+<coverage generated="1775237152900" clover="3.2.0">
+  <project timestamp="1775237152900" name="All files">
     <metrics statements="2" coveredstatements="2" conditionals="4" coveredconditionals="2" methods="0" coveredmethods="0" elements="6" coveredelements="4" complexity="0" loc="2" ncloc="2" packages="1" files="1" classes="1"/>
     <file name="env.config.js" path="F:\MyProJect_Study04\Backend-Typescript\crest-walk-api-JS\src\config\env.config.js">
       <metrics statements="2" coveredstatements="2" conditionals="4" coveredconditionals="2" methods="0" coveredmethods="0"/>
