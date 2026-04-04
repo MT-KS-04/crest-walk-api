@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: ['main', 'master']
+    branches: ['**'] # Chạy cho tất cả các nhánh
   pull_request:
-    branches: ['main', 'master']
+    branches: ['main', 'master', 'dev'] # Chú trọng kiểm tra PR vào các nhánh chính
 
 jobs:
   build:
