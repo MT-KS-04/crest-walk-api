@@ -8,6 +8,4 @@
  */
 import logger from '../middleware/winston.js';
 
-const register = async(data) => {
-    
-};
+const register = async (data) => {};
