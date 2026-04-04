@@ -18,10 +18,10 @@ import helmet from 'helmet';
 /**
  * Custom Modules
  */
-import limiter from './middleware/rate_limit.js';
-import logger from './middleware/winston.js';
+import limiter from './lib/rate_limit.js';
+import logger from './lib/winston.js';
 import config from './config/env.config.js';
-import { connectToData, disconnectFromData } from './middleware/mongoose.js';
+import { connectToData, disconnectFromData } from './lib/mongoose.js';
 
 /**
  * Routers

@@ -6,6 +6,11 @@
 import { Router } from 'express';
 import config from '../config/env.config.js';
 
+/**
+ * Routers
+ */
+import authRouter from './auth.router.js';
+
 const router = Router();
 
 /**
@@ -24,5 +29,8 @@ router.get('/', (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// Init Router
+router.use('/auth', authRouter);
 
 export default router;
