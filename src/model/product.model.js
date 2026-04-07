@@ -35,6 +35,11 @@ const productSchema = new Schema(
       ref: 'Category',
       required: [true, 'Category is required'],
     },
+    brand_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'Brand',
+      required: [true, 'Brand is required'],
+    },
     name: {
       type: String,
       required: [true, 'Product name is required'],
@@ -46,18 +51,41 @@ const productSchema = new Schema(
       required: [true, 'Price is required'],
       min: [0, 'Price cannot be negative'],
     },
-    image: {
-      type: String,
-      required: [true, 'Product image URL is required'],
+    original_price: {
+      type: Number,
+      min: [0, 'Original price cannot be negative'],
+      default: null,
+    },
+    images: {
+      type: [String],
+      required: [true, 'Product images are required'],
+      validate: {
+        validator: (v) => Array.isArray(v) && v.length > 0,
+        message: 'Product must have at least one image',
+      },
     },
     description: {
       type: String,
       default: '',
     },
-    brand: {
-      type: String,
-      trim: true,
-      default: '',
+    is_new: {
+      type: Boolean,
+      default: false,
+    },
+    is_sale: {
+      type: Boolean,
+      default: false,
+    },
+    rating: {
+      type: Number,
+      default: 0,
+      min: [0, 'Rating cannot be negative'],
+      max: [5, 'Rating cannot exceed 5'],
+    },
+    review_count: {
+      type: Number,
+      default: 0,
+      min: [0, 'Review count cannot be negative'],
     },
     sizes: {
       type: [productSizeSchema],

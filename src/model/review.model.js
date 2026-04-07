@@ -31,6 +31,14 @@ const reviewSchema = new Schema(
       default: '',
       maxLength: [1000, 'Comment must be less than 1000 characters'],
     },
+    status: {
+      type: String,
+      enum: {
+        values: ['pending', 'approved', 'rejected'],
+        message: 'Status must be pending, approved or rejected',
+      },
+      default: 'pending',
+    },
   },
   {
     timestamps: true,
