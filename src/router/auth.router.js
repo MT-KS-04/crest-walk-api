@@ -8,6 +8,7 @@
  */
 import { Router } from 'express';
 import { body, cookie } from 'express-validator';
+import bcrypt from 'bcrypt';
 
 /**
  * Custom Moduels
@@ -19,6 +20,7 @@ import validationError from '../middleware/validationError.js';
  * Controllers
  */
 import register from '../controller/auth/register.controller.js';
+import login from '../controller/auth/login.controller.js';
 
 const router = Router();
 
@@ -51,6 +53,48 @@ router.post(
     .withMessage('Role must be either admin or user'),
   validationError,
   register,
+);
+
+router.post(
+  '/login',
+  body('email')
+    .trim()
+    .notEmpty()
+    .withMessage('Email is required')
+    .isLength({ max: 50 })
+    .withMessage('Email must be less than 50 characters')
+    .isEmail()
+    .withMessage('Invalid email address')
+    .custom(async (value) => {
+      const userExists = await User.exists({ email: value });
+      if (!userExists) {
+        throw new Error('User email or password is invalid');
+      }
+    }),
+  body('password')
+    .notEmpty()
+    .withMessage('Password is required')
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters long')
+    .custom(async (value, { req }) => {
+      const { email } = req.body;
+      const user = await User.findOne({ email })
+        .select('password')
+        .lean()
+        .exec();
+
+      if (!user) {
+        throw new Error('User password or email is invalid');
+      }
+
+      const passwordMatch = await bcrypt.compare(value, user.password);
+
+      if (!passwordMatch) {
+        throw new Error('User password or email is invalid');
+      }
+    }),
+  validationError,
+  login,
 );
 
 export default router;

@@ -7,9 +7,16 @@ import { Router } from 'express';
 import config from '../config/env.config.js';
 
 /**
+ * Middlewares
+ */
+import authenticate from '../middleware/authenticate.js';
+import authorize from '../middleware/authorize.js';
+
+/**
  * Routers
  */
 import authRouter from './auth.router.js';
+import adminRouter from './admin/index.router.js';
 
 const router = Router();
 
@@ -32,5 +39,6 @@ router.get('/', (req, res) => {
 
 // Init Router
 router.use('/auth', authRouter);
+router.use('/admin', authenticate, authorize(['admin']), adminRouter);
 
 export default router;
