@@ -22,12 +22,11 @@ import { verifyAccessToken } from '../lib/jwt.js';
 const authenticate = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  if (authHeader == null) {
-    res.status(404).json({
-      code: 'Authentication Error',
-      message: 'Headers Not Found',
+  if (!authHeader) {
+    return res.status(401).json({
+      code: 'Unauthorized',
+      message: 'Authorization header is missing or invalid',
     });
-    return;
   }
 
   if (!authHeader.startsWith('Bearer ')) {
