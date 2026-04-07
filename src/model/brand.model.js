@@ -8,13 +8,12 @@
  */
 import { Schema, model } from 'mongoose';
 
-const categorySchema = new Schema(
+const brandSchema = new Schema(
   {
     name: {
       type: String,
-      required: [true, 'Category name is required'],
-      maxLength: [50, 'Category name must be less than 50 characters'],
-      unique: [true, 'Category name must be unique'],
+      required: [true, 'Brand name is required'],
+      unique: [true, 'Brand name must be unique'],
       trim: true,
     },
     slug: {
@@ -24,12 +23,20 @@ const categorySchema = new Schema(
       lowercase: true,
       trim: true,
     },
+    logo: {
+      type: String,
+      default: null,
+    },
+    description: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,
   },
 );
 
-const Category = model('Category', categorySchema);
+const Brand = model('Brand', brandSchema);
 
-export default Category;
+export default Brand;

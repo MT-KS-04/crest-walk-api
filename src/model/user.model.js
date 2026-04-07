@@ -38,6 +38,12 @@ const userSchema = new Schema(
       trim: true,
       match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email address'],
     },
+    phone: {
+      type: String,
+      match: [/^[0-9]{9,11}$/, 'Please provide a valid phone number'],
+      trim: true,
+      default: null,
+    },
     role: {
       type: String,
       enum: {
@@ -45,6 +51,14 @@ const userSchema = new Schema(
         message: 'Role must be either admin or user',
       },
       default: 'user',
+    },
+    status: {
+      type: String,
+      enum: {
+        values: ['active', 'blocked'],
+        message: 'Status must be either active or blocked',
+      },
+      default: 'active',
     },
   },
   {

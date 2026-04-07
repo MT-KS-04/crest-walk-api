@@ -19,6 +19,10 @@ const orderItemSchema = new Schema(
       ref: 'Product',
       required: [true, 'Product is required'],
     },
+    product_name: {
+      type: String,
+      required: [true, 'Product name snapshot is required'],
+    },
     size: {
       type: Number,
       required: [true, 'Size is required'],
@@ -65,8 +69,9 @@ const orderSchema = new Schema(
     status: {
       type: String,
       enum: {
-        values: ['pending', 'shipping', 'delivered', 'cancelled'],
-        message: 'Status must be pending, shipping, delivered or cancelled',
+        values: ['pending', 'confirmed', 'shipping', 'delivered', 'cancelled'],
+        message:
+          'Status must be pending, confirmed, shipping, delivered or cancelled',
       },
       default: 'pending',
     },
@@ -77,6 +82,14 @@ const orderSchema = new Schema(
         message: 'Payment method must be COD or Online',
       },
       required: [true, 'Payment method is required'],
+    },
+    payment_status: {
+      type: String,
+      enum: {
+        values: ['unpaid', 'paid'],
+        message: 'Payment status must be unpaid or paid',
+      },
+      default: 'unpaid',
     },
     address: {
       type: String,
