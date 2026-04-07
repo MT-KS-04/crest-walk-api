@@ -13,13 +13,14 @@ const { JsonWebTokenError, TokenExpiredError } = pkg;
  * Custom Moduels
  */
 import logger from '../lib/winston.js';
+import User from '../model/user.model.js';
 
 /**
  * Custom Lib
  */
 import { verifyAccessToken } from '../lib/jwt.js';
 
-const authenticate = (req, res, next) => {
+const authenticate = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
@@ -38,10 +39,26 @@ const authenticate = (req, res, next) => {
   }
 
   const [_, token] = authHeader.split(' ');
-  console.log(_, token);
 
   try {
     const jwtPayload = verifyAccessToken(token);
+
+    // Check if user is blocked
+    const user = await User.findById(jwtPayload.userId).select('status').lean().exec();
+    
+    if (!user) {
+      return res.status(401).json({
+        code: 'AuthenticationError',
+        message: 'User account no longer exists',
+      });
+    }
+
+    if (user.status === 'blocked') {
+      return res.status(403).json({
+        code: 'Forbidden',
+        message: 'Your account has been blocked. Please contact support.',
+      });
+    }
 
     req.userId = jwtPayload.userId;
 
