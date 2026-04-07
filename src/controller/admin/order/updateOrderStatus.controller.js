@@ -8,7 +8,10 @@ import updateOrderStatusService from '../../../service/admin/order/updateOrderSt
 
 const updateOrderStatus = async (req, res) => {
   try {
-    const updatedOrder = await updateOrderStatusService(req.params.id, req.body);
+    const updatedOrder = await updateOrderStatusService(
+      req.params.id,
+      req.body,
+    );
 
     res.status(200).json({
       message: 'Order updated successfully',
