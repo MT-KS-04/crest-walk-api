@@ -8,6 +8,7 @@ import { Router } from 'express';
 import productRouter from './product.router.js';
 import categoryRouter from './category.router.js';
 import brandRouter from './brand.router.js';
+import orderRouter from './order.router.js';
 
 const router = Router();
 
@@ -15,5 +16,6 @@ const router = Router();
 router.use('/products', productRouter);
 router.use('/categories', categoryRouter);
 router.use('/brands', brandRouter);
+router.use('/orders', orderRouter);
 
 export default router;
