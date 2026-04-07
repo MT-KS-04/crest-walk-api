@@ -17,7 +17,7 @@ import authorize from '../middleware/authorize.js';
  */
 import authRouter from './auth.router.js';
 import adminRouter from './admin/index.router.js';
-import productRouter from './product.router.js';
+import productRouter from './user/product.router.js';
 
 const router = Router();
 

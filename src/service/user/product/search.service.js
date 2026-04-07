@@ -3,7 +3,7 @@
  * @license Apache-2.0
  */
 
-import Product from '../../model/product.model.js';
+import Product from '../../../model/product.model.js';
 
 const searchService = async (query) => {
   const { keyword } = query;
