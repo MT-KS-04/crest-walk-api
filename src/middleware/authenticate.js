@@ -6,7 +6,8 @@
 /**
  * Node moduels
  */
-import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+import pkg from 'jsonwebtoken';
+const { JsonWebTokenError, TokenExpiredError } = pkg;
 
 /**
  * Custom Moduels
