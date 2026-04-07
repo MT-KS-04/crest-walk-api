@@ -15,7 +15,9 @@ const search = async (req, res) => {
       ...data,
     });
 
-    logger.info('Products searched successfully', { keyword: req.query.keyword });
+    logger.info('Products searched successfully', {
+      keyword: req.query.keyword,
+    });
   } catch (error) {
     const status = error.status || 500;
     res.status(status).json({

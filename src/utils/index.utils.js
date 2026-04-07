@@ -11,5 +11,7 @@ export const genUsername = () => {
 };
 
 export const genResetToken = () => {
-  return Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+  return (
+    Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
+  );
 };

@@ -28,7 +28,9 @@ const forgotPassword = async (req, res) => {
       message: 'Reset password link has been sent to your email',
     });
 
-    logger.info('Forgot password email request handled successfully', { email });
+    logger.info('Forgot password email request handled successfully', {
+      email,
+    });
   } catch (error) {
     if (error.code === 'NotFound') {
       return res.status(404).json({
