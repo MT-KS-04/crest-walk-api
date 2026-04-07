@@ -5,7 +5,7 @@
 
 import Product from '../../../model/product.model.js';
 import Category from '../../../model/category.model.js';
-// import Brand from '../../../model/brand.model.js';
+import Brand from '../../../model/brand.model.js';
 
 const updateProductService = async (id, data) => {
   // Check if product exists
@@ -27,14 +27,14 @@ const updateProductService = async (id, data) => {
   }
 
   // Validate brand if updating
-  // if (data.brand_id) {
-  //   const brandExists = await Brand.exists({ _id: data.brand_id });
-  //   if (!brandExists) {
-  //     const error = new Error('Brand not found');
-  //     error.statusCode = 404;
-  //     throw error;
-  //   }
-  // }
+  if (data.brand_id) {
+    const brandExists = await Brand.exists({ _id: data.brand_id });
+    if (!brandExists) {
+      const error = new Error('Brand not found');
+      error.statusCode = 404;
+      throw error;
+    }
+  }
 
   // Update fields
   const updatedProduct = await Product.findByIdAndUpdate(

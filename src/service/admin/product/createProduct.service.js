@@ -16,13 +16,13 @@ const createProductService = async (data) => {
     throw error;
   }
 
-  // Option: Verify if Brand exists. (Assuming Brand schema is defined)
-  // const brandExists = await Brand.exists({ _id: data.brand_id });
-  // if (!brandExists) {
-  //   const error = new Error('Brand not found');
-  //   error.statusCode = 404;
-  //   throw error;
-  // }
+  // Option: Verify if Brand exists.
+  const brandExists = await Brand.exists({ _id: data.brand_id });
+  if (!brandExists) {
+    const error = new Error('Brand not found');
+    error.statusCode = 404;
+    throw error;
+  }
 
   // Create new product
   const newProduct = await Product.create({
