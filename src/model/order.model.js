@@ -70,7 +70,8 @@ const orderSchema = new Schema(
       type: String,
       enum: {
         values: ['pending', 'confirmed', 'shipping', 'delivered', 'cancelled'],
-        message: 'Status must be pending, confirmed, shipping, delivered or cancelled',
+        message:
+          'Status must be pending, confirmed, shipping, delivered or cancelled',
       },
       default: 'pending',
     },
