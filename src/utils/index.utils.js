@@ -9,3 +9,7 @@ export const genUsername = () => {
   const username = usernamePerfix + '-' + randomChars;
   return username;
 };
+
+export const genResetToken = () => {
+  return Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+};

@@ -60,6 +60,14 @@ const userSchema = new Schema(
       },
       default: 'active',
     },
+    password_reset_token: {
+      type: String,
+      default: null,
+    },
+    password_reset_expires: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
