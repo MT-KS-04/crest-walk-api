@@ -8,7 +8,7 @@ import { generateSlug } from '../../../utils/slug.utils.js';
 
 const updateCategoryService = async (id, data) => {
   const category = await Category.findById(id);
-  
+
   if (!category) {
     const error = new Error('Category not found');
     error.statusCode = 404;
@@ -47,7 +47,7 @@ const updateCategoryService = async (id, data) => {
   const updatedCategory = await Category.findByIdAndUpdate(
     id,
     { $set: updateData },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   ).exec();
 
   return updatedCategory;
