@@ -3,8 +3,8 @@
  * @license Apache-2.0
  */
 
-import logger from '../../lib/winston.js';
-import searchService from '../../service/product/search.service.js';
+import logger from '../../../lib/winston.js';
+import searchService from '../../../service/user/product/search.service.js';
 
 const search = async (req, res) => {
   try {
