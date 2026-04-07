@@ -41,8 +41,8 @@ router.post(
   body('password')
     .notEmpty()
     .withMessage('Password is required')
-    .isLength({ min: 8 })
-    .withMessage('Password must be at least 20 characters long'),
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters long'),
   body('role')
     .optional()
     .isString()

@@ -33,6 +33,7 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'Email is required'],
       unique: [true, 'Email must be unique'],
+      maxLength: [50, 'Email must be less than 50 characters'],
       lowercase: true,
       trim: true,
       match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email address'],

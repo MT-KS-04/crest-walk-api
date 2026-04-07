@@ -12,3 +12,6 @@ db.txt
 
 # Generated coverage report
 coverage/
+
+# Sample FE
+frontend

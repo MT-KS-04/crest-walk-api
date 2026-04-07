@@ -9,3 +9,6 @@ node_modules/
 
 # Generated coverage report
 coverage/
+
+# Sample FE
+frontend

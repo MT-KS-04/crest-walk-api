@@ -11,7 +11,7 @@ import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 /**
  * Custom Moduels
  */
-import logger from '../lib/winston';
+import logger from '../lib/winston.js';
 
 /**
  * Custom Lib
@@ -20,6 +20,14 @@ import { verifyAccessToken } from '../lib/jwt.js';
 
 const authenticate = (req, res, next) => {
   const authHeader = req.headers.authorization;
+
+  if (authHeader == null) {
+    res.status(404).json({
+      code: 'Authentication Error',
+      message: 'Headers Not Found',
+    });
+    return;
+  }
 
   if (!authHeader.startsWith('Bearer ')) {
     res.status(401).json({

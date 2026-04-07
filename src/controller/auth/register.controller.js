@@ -27,7 +27,7 @@ const register = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({
+    res.status(201).json({
       user: {
         username: newUser.username,
         full_name: newUser.full_name,

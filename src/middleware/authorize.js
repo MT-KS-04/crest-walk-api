@@ -6,7 +6,12 @@
 /**
  * Models
  */
-import User from '../model/user.model';
+import User from '../model/user.model.js';
+
+/**
+ * Custom Moduels
+ */
+import logger from '../lib/winston.js';
 
 const authorize = (roles = []) => {
   return async (req, res, next) => {
