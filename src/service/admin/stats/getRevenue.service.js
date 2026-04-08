@@ -8,9 +8,17 @@ import Order from '../../../model/order.model.js';
 const getRevenueService = async (query = {}) => {
   const { interval = 'day', startDate, endDate } = query;
 
-  // 1. Build Match pipeline (Only paid orders)
+  // 1. Build Match pipeline
+  // Include:
+  // - all successfully paid orders
+  // - COD orders that were delivered (often still marked unpaid in current flow)
+  // Exclude cancelled orders from revenue.
   const matchStage = {
-    payment_status: 'paid',
+    status: { $ne: 'cancelled' },
+    $or: [
+      { payment_status: 'paid' },
+      { payment_method: 'COD', status: 'delivered' },
+    ],
   };
 
   if (startDate || endDate) {
@@ -19,7 +27,10 @@ const getRevenueService = async (query = {}) => {
       matchStage.createdAt.$gte = new Date(startDate);
     }
     if (endDate) {
-      matchStage.createdAt.$lte = new Date(endDate);
+      // Fix: đẩy về cuối ngày để bao gồm toàn bộ ngày endDate
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
+      matchStage.createdAt.$lte = end;
     }
   }
 
