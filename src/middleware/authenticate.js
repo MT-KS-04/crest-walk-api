@@ -43,6 +43,8 @@ const authenticate = async (req, res, next) => {
   try {
     const jwtPayload = verifyAccessToken(token);
 
+    req.userId = jwtPayload.userId;
+
     // Check if user is blocked
     const user = await User.findById(jwtPayload.userId)
       .select('status')

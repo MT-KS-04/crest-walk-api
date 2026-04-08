@@ -23,8 +23,18 @@ import register from '../controller/auth/register.controller.js';
 import login from '../controller/auth/login.controller.js';
 import requestPasswordReset from '../controller/auth/requestPasswordReset.controller.js';
 import resetPassword from '../controller/auth/resetPassword.controller.js';
+import refreshToken from '../controller/auth/refreshToken.controller.js';
+import getMe from '../controller/auth/getMe.controller.js';
+
+/**
+ * Middleware
+ */
+import authenticate from '../middleware/authenticate.js';
+import authorize from '../middleware/authorize.js';
 
 const router = Router();
+
+router.get('/me', authenticate, authorize(['admin', 'user']), getMe);
 
 router.post(
   '/register',
@@ -121,6 +131,17 @@ router.post(
     .withMessage('Password must be at least 6 characters long'),
   validationError,
   resetPassword,
+);
+
+router.post(
+  '/refresh-token',
+  cookie('refreshToken')
+    .notEmpty()
+    .withMessage('Refresh token required')
+    .isJWT()
+    .withMessage('Invalid refresh token'),
+  validationError,
+  refreshToken,
 );
 
 export default router;

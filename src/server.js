@@ -32,7 +32,12 @@ import routerV1 from './router/index.router.js';
 const app = express();
 
 // Init Cors
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:3001',
+    credentials: true,
+  }),
+);
 
 // Enable json
 app.use(express.json());

@@ -17,7 +17,7 @@ import { generateAccessToken, generateRefreshToken } from '../../lib/jwt.js';
 
 const loginService = async (data) => {
   const user = await User.findOne({ email: data.email })
-    .select('username email password role')
+    .select('username full_name email role')
     .lean()
     .exec();
 
