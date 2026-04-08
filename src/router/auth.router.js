@@ -24,6 +24,7 @@ import login from '../controller/auth/login.controller.js';
 import requestPasswordReset from '../controller/auth/requestPasswordReset.controller.js';
 import resetPassword from '../controller/auth/resetPassword.controller.js';
 import refreshToken from '../controller/auth/refreshToken.controller.js';
+import logout from '../controller/auth/logout.controller.js';
 import getMe from '../controller/auth/getMe.controller.js';
 
 /**
@@ -143,5 +144,11 @@ router.post(
   validationError,
   refreshToken,
 );
+
+/**
+ * Đăng xuất: xóa refresh token trong DB (nếu cookie còn) và xóa cookie HttpOnly.
+ * Không bắt buộc Bearer — client vẫn gọi được khi access token hết hạn (cookie có thể còn).
+ */
+router.post('/logout', logout);
 
 export default router;
