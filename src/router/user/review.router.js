@@ -4,17 +4,18 @@
  */
 
 import { Router } from 'express';
-import addReviewController from '../../controller/user/review/add.controller.js';
-import getReviewController from '../../controller/user/review/get.controller.js';
+import reviewController from '../../controller/user/review/review.controller.js';
 import authenticate from '../../middleware/authenticate.js';
 
 const router = Router();
 
-// Thêm đánh giá/bình luận (Bắt buộc phải xì Token ra đăng nhập)
-router.post('/add', authenticate, addReviewController);
+// Lấy danh sách đánh giá của sản phẩm (Public)
+router.get('/product/:productId', reviewController.getProductReviews);
 
-// Chỗ này xem đánh giá của sản phẩm, khách thả rông không có tài khoản cũng được vào xem.
-// Nên tôi KHÔNG kẹp hàm auth vào đây
-router.get('/:productId', getReviewController);
+// Kiểm tra quyền đánh giá (Private)
+router.get('/can-review/:productId', authenticate, reviewController.checkCanReview);
+
+// Gửi đánh giá (Private)
+router.post('/', authenticate, reviewController.createReview);
 
 export default router;
