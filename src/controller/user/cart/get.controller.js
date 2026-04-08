@@ -10,11 +10,14 @@ const get = async (req, res) => {
   try {
     const data = await getService(req.userId);
     res.status(200).json({ success: true, ...data });
-    
+
     logger.info('Fetched user cart successfully', { userId: req.userId });
   } catch (error) {
     const status = error.status || 500;
-    res.status(status).json({ code: status === 404 ? 'NotFound' : 'ServerError', message: error.message });
+    res.status(status).json({
+      code: status === 404 ? 'NotFound' : 'ServerError',
+      message: error.message,
+    });
     logger.error('Error fetching cart', error);
   }
 };
