@@ -21,6 +21,8 @@ import validationError from '../middleware/validationError.js';
  */
 import register from '../controller/auth/register.controller.js';
 import login from '../controller/auth/login.controller.js';
+import requestPasswordReset from '../controller/auth/requestPasswordReset.controller.js';
+import resetPassword from '../controller/auth/resetPassword.controller.js';
 
 const router = Router();
 
@@ -95,6 +97,30 @@ router.post(
     }),
   validationError,
   login,
+);
+
+router.post(
+  '/forgot-password',
+  body('email')
+    .trim()
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Invalid email address'),
+  validationError,
+  requestPasswordReset,
+);
+
+router.post(
+  '/reset-password',
+  body('token').trim().notEmpty().withMessage('Token is required'),
+  body('newPassword')
+    .notEmpty()
+    .withMessage('New password is required')
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters long'),
+  validationError,
+  resetPassword,
 );
 
 export default router;
