@@ -11,6 +11,7 @@ import brandRouter from './brand.router.js';
 import orderRouter from './order.router.js';
 import userRouter from './user.router.js';
 import inventoryRouter from './inventory.router.js';
+import statsRouter from './stats.router.js';
 
 const router = Router();
 
@@ -21,5 +22,6 @@ router.use('/brands', brandRouter);
 router.use('/orders', orderRouter);
 router.use('/users', userRouter);
 router.use('/inventory', inventoryRouter);
+router.use('/stats', statsRouter);
 
 export default router;

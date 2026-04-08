@@ -23,7 +23,7 @@ router.get(
   '/:id',
   param('id').isMongoId().withMessage('Invalid User ID'),
   validationError,
-  getUserById
+  getUserById,
 );
 
 // Cập nhật trạng thái và vai trò
@@ -39,7 +39,7 @@ router.put(
     .isIn(['admin', 'user'])
     .withMessage('Role must be either admin or user'),
   validationError,
-  updateUserStatus
+  updateUserStatus,
 );
 
 // Reset mật khẩu người dùng
@@ -47,10 +47,12 @@ router.put(
   '/:id/reset-password',
   param('id').isMongoId().withMessage('Invalid User ID'),
   body('newPassword')
-    .notEmpty().withMessage('New password is required')
-    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+    .notEmpty()
+    .withMessage('New password is required')
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters'),
   validationError,
-  resetUserPassword
+  resetUserPassword,
 );
 
 export default router;

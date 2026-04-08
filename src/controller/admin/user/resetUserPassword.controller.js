@@ -15,7 +15,9 @@ const resetUserPassword = async (req, res) => {
       data: null,
     });
 
-    logger.info(`Password reset for user: ${req.params.id} by admin: ${req.userId}`);
+    logger.info(
+      `Password reset for user: ${req.params.id} by admin: ${req.userId}`,
+    );
   } catch (error) {
     if (error.statusCode) {
       res.status(error.statusCode).json({
