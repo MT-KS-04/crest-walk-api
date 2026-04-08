@@ -19,6 +19,7 @@ import authRouter from './auth.router.js';
 import adminRouter from './admin/index.router.js';
 import productRouter from './user/product.router.js';
 import cartRouter from './user/cart.router.js';
+import orderRouter from './user/order.router.js';
 import wishlistRouter from './user/wishlist.router.js';
 
 const router = Router();
@@ -45,6 +46,7 @@ router.use('/auth', authRouter);
 router.use('/admin', authenticate, authorize(['admin']), adminRouter);
 router.use('/products', productRouter);
 router.use('/cart', authenticate, cartRouter);
+router.use('/orders', authenticate, orderRouter);
 router.use('/wishlist', authenticate, wishlistRouter);
 
 export default router;
