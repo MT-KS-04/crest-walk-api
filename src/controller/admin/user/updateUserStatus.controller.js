@@ -9,14 +9,20 @@ import updateUserStatusService from '../../../service/admin/user/updateUserStatu
 const updateUserStatus = async (req, res) => {
   try {
     // req.userId is from authenticate middleware
-    const updatedUser = await updateUserStatusService(req.userId, req.params.id, req.body);
+    const updatedUser = await updateUserStatusService(
+      req.userId,
+      req.params.id,
+      req.body,
+    );
 
     res.status(200).json({
       message: 'User updated successfully',
       data: updatedUser,
     });
 
-    logger.info(`User status/role updated for: ${req.params.id} by admin: ${req.userId}`);
+    logger.info(
+      `User status/role updated for: ${req.params.id} by admin: ${req.userId}`,
+    );
   } catch (error) {
     if (error.statusCode) {
       res.status(error.statusCode).json({

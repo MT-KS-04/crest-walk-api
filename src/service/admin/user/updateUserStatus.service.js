@@ -37,8 +37,10 @@ const updateUserStatusService = async (adminId, targetUserId, data) => {
   const updatedUser = await User.findByIdAndUpdate(
     targetUserId,
     { $set: updateData },
-    { new: true, runValidators: true }
-  ).select('-password').exec();
+    { new: true, runValidators: true },
+  )
+    .select('-password')
+    .exec();
 
   return updatedUser;
 };
