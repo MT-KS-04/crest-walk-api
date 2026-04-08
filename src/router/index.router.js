@@ -23,6 +23,8 @@ import orderRouter from './user/order.router.js';
 import wishlistRouter from './user/wishlist.router.js';
 import paymentRouter from './user/payment.router.js';
 import reviewRouter from './user/review.router.js';
+import brandRouter from './admin/brand.router.js';
+import categoryRouter from './admin/category.router.js';
 
 const router = Router();
 
@@ -47,6 +49,8 @@ router.get('/', (req, res) => {
 router.use('/auth', authRouter);
 router.use('/admin', authenticate, authorize(['admin']), adminRouter);
 router.use('/products', productRouter);
+router.use('/brands', brandRouter);
+router.use('/categories', categoryRouter);
 router.use('/cart', authenticate, cartRouter);
 router.use('/orders', authenticate, orderRouter);
 router.use('/wishlist', authenticate, wishlistRouter);
