@@ -22,6 +22,7 @@ import cartRouter from './user/cart.router.js';
 import orderRouter from './user/order.router.js';
 import wishlistRouter from './user/wishlist.router.js';
 import paymentRouter from './user/payment.router.js';
+import reviewRouter from './user/review.router.js';
 
 const router = Router();
 
@@ -50,5 +51,6 @@ router.use('/cart', authenticate, cartRouter);
 router.use('/orders', authenticate, orderRouter);
 router.use('/wishlist', authenticate, wishlistRouter);
 router.use('/payment', paymentRouter);
+router.use('/reviews', reviewRouter); // Middleware authenticate sẽ kẹp sau lưng từng cái nhỏ bên trong tùy tình huống
 
 export default router;
