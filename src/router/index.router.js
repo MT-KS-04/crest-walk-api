@@ -18,6 +18,7 @@ import authorize from '../middleware/authorize.js';
 import authRouter from './auth.router.js';
 import adminRouter from './admin/index.router.js';
 import productRouter from './user/product.router.js';
+import cartRouter from './user/cart.router.js';
 
 const router = Router();
 
@@ -42,5 +43,6 @@ router.get('/', (req, res) => {
 router.use('/auth', authRouter);
 router.use('/admin', authenticate, authorize(['admin']), adminRouter);
 router.use('/products', productRouter);
+router.use('/cart', authenticate, cartRouter);
 
 export default router;
