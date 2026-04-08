@@ -55,14 +55,24 @@ const getProductsService = async (query) => {
     filter.category_id = category;
   }
 
-  // Lọc theo thương hiệu
+  // Lọc theo thương hiệu (một hoặc nhiều id, cách nhau bởi dấu phẩy)
   if (brand) {
-    if (!isMongoId(brand)) {
-      const error = new Error('Invalid brand id');
-      error.status = 400;
-      throw error;
+    const parts = String(brand)
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    for (const id of parts) {
+      if (!isMongoId(id)) {
+        const error = new Error('Invalid brand id');
+        error.status = 400;
+        throw error;
+      }
     }
-    filter.brand_id = brand;
+    if (parts.length === 1) {
+      filter.brand_id = parts[0];
+    } else if (parts.length > 1) {
+      filter.brand_id = { $in: parts };
+    }
   }
 
   // Lọc theo giá (Chức năng 7)

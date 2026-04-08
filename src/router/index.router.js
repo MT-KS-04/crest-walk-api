@@ -11,10 +11,9 @@ import config from '../config/env.config.js';
  */
 import authenticate from '../middleware/authenticate.js';
 import authorize from '../middleware/authorize.js';
+import optionalAuthenticate from '../middleware/optionalAuthenticate.js';
 
-/**
- * Routers
- */
+import trackOrderController from '../controller/user/order/trackOrder.controller.js';
 import authRouter from './auth.router.js';
 import adminRouter from './admin/index.router.js';
 import productRouter from './user/product.router.js';
@@ -25,6 +24,7 @@ import paymentRouter from './user/payment.router.js';
 import reviewRouter from './user/review.router.js';
 import brandRouter from './admin/brand.router.js';
 import categoryRouter from './admin/category.router.js';
+import bannerRouter from './admin/banner.router.js';
 
 const router = Router();
 
@@ -51,7 +51,9 @@ router.use('/admin', authenticate, authorize(['admin']), adminRouter);
 router.use('/products', productRouter);
 router.use('/brands', brandRouter);
 router.use('/categories', categoryRouter);
+router.use('/banners', bannerRouter);
 router.use('/cart', authenticate, cartRouter);
+router.get('/orders/track', optionalAuthenticate, trackOrderController);
 router.use('/orders', authenticate, orderRouter);
 router.use('/wishlist', authenticate, wishlistRouter);
 router.use('/payment', paymentRouter);

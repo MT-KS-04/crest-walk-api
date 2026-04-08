@@ -45,8 +45,8 @@ router.get(
     .withMessage('Position must be hero, sidebar or popup'),
   query('is_active')
     .optional()
-    .isBoolean()
-    .withMessage('is_active must be boolean'),
+    .isIn(['true', 'false'])
+    .withMessage('is_active must be true or false'),
   validationError,
   getBanners,
 );
