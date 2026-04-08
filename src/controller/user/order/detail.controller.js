@@ -21,7 +21,12 @@ const detail = async (req, res) => {
   } catch (error) {
     const status = error.status || 500;
     res.status(status).json({
-      code: status === 404 ? 'NotFound' : (status === 403 ? 'Forbidden' : 'ServerError'),
+      code:
+        status === 404
+          ? 'NotFound'
+          : status === 403
+            ? 'Forbidden'
+            : 'ServerError',
       message: error.message || 'Internal Server Error',
     });
 

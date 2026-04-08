@@ -17,7 +17,10 @@ const get = async (req, res) => {
       message: 'Reviews fetched successfully',
     });
 
-    logger.info('Reviews fetched successfully', { productId, reviewCount: reviews.length });
+    logger.info('Reviews fetched successfully', {
+      productId,
+      reviewCount: reviews.length,
+    });
   } catch (error) {
     const status = error.status || 500;
     res.status(status).json({

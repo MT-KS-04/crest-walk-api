@@ -33,6 +33,7 @@ const createProductService = async (data) => {
     category_id: data.category_id,
     brand_id: data.brand_id,
     images: data.images,
+    publicIds: data.publicIds || [],
     sizes: data.sizes || [],
   });
 

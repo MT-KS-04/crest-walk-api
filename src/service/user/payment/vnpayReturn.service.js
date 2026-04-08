@@ -39,7 +39,11 @@ const vnpayReturnService = async (vnpayParams) => {
       // Khách hàng hủy hoặc thẻ lỗi
       order.status = 'cancelled';
       await order.save();
-      return { success: false, message: 'Thanh toán thất bại hoặc đã hủy', orderId };
+      return {
+        success: false,
+        message: 'Thanh toán thất bại hoặc đã hủy',
+        orderId,
+      };
     }
   } else {
     throw new Error('Invalid Checksum (Tấn công mạng/VNPAY URL mạo danh)');

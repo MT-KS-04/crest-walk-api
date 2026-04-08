@@ -16,7 +16,10 @@ const history = async (req, res) => {
       message: 'Order history fetched successfully',
     });
 
-    logger.info('Order history fetched', { userId: req.userId, count: orders.length });
+    logger.info('Order history fetched', {
+      userId: req.userId,
+      count: orders.length,
+    });
   } catch (error) {
     const status = error.status || 500;
     res.status(status).json({

@@ -16,12 +16,12 @@ const getService = async (productId) => {
   }
 
   // 2. Tìm tất cả bình luận có liên kết với sản phẩm & CHỈ LẤY những bình luận Admin đã duyệt 'approved'
-  const reviews = await Review.find({ 
+  const reviews = await Review.find({
     product_id: productId,
-    status: 'approved'
+    status: 'approved',
   })
     .populate('user_id', 'username email avatar') // Hiển thị thông tin cơ bản của người gửi
-    .sort({ createdAt: -1 }) // Lấy đánh giá mới nhất lên đầu 
+    .sort({ createdAt: -1 }) // Lấy đánh giá mới nhất lên đầu
     .lean();
 
   return reviews;

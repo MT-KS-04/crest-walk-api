@@ -40,17 +40,21 @@ const checkoutService = async (userId, payload, reqIp) => {
 
   for (const item of cart.items) {
     const product = await Product.findById(item.product_id);
-    
+
     if (!product) {
-      const error = new Error(`Product mapping failed for ID: ${item.product_id}`);
+      const error = new Error(
+        `Product mapping failed for ID: ${item.product_id}`,
+      );
       error.status = 404;
       throw error;
     }
 
     // Kiểm tra hàng trong kho theo size
-    const productSize = product.sizes.find(s => s.size === item.size);
+    const productSize = product.sizes.find((s) => s.size === item.size);
     if (!productSize || productSize.quantity < item.quantity) {
-      const error = new Error(`Insufficient stock for product ${product.name} (Size: ${item.size})`);
+      const error = new Error(
+        `Insufficient stock for product ${product.name} (Size: ${item.size})`,
+      );
       error.status = 400;
       throw error;
     }
@@ -86,7 +90,7 @@ const checkoutService = async (userId, payload, reqIp) => {
   for (const item of orderItems) {
     await Product.findOneAndUpdate(
       { _id: item.product_id, 'sizes.size': item.size },
-      { $inc: { 'sizes.$.quantity': -item.quantity } }
+      { $inc: { 'sizes.$.quantity': -item.quantity } },
     );
   }
 
@@ -97,7 +101,7 @@ const checkoutService = async (userId, payload, reqIp) => {
   // 6. Xử lý VNPAY URL nếu chọn Online
   if (method === 'Online') {
     const ipAddr = reqIp || '127.0.0.1';
-    
+
     let vnp_Params = {};
     vnp_Params['vnp_Version'] = '2.1.0';
     vnp_Params['vnp_Command'] = 'pay';
@@ -105,7 +109,8 @@ const checkoutService = async (userId, payload, reqIp) => {
     vnp_Params['vnp_Locale'] = 'vn';
     vnp_Params['vnp_CurrCode'] = 'VND';
     vnp_Params['vnp_TxnRef'] = order._id.toString();
-    vnp_Params['vnp_OrderInfo'] = `Thanh toan hoa don giay CrestWalk: ${order._id}`;
+    vnp_Params['vnp_OrderInfo'] =
+      `Thanh toan hoa don giay CrestWalk: ${order._id}`;
     vnp_Params['vnp_OrderType'] = 'other';
     vnp_Params['vnp_Amount'] = total_price * 100; // VNPAY nhận số tiền nhân 100
     vnp_Params['vnp_ReturnUrl'] = VNPAY_CONFIG.vnp_ReturnUrl;
@@ -113,13 +118,14 @@ const checkoutService = async (userId, payload, reqIp) => {
     vnp_Params['vnp_CreateDate'] = getVnpTime();
 
     vnp_Params = sortObject(vnp_Params);
-    
+
     const signData = new URLSearchParams(vnp_Params).toString();
     const hmac = crypto.createHmac('sha512', VNPAY_CONFIG.vnp_HashSecret);
     const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
-    
+
     vnp_Params['vnp_SecureHash'] = signed;
-    const finalUrl = VNPAY_CONFIG.vnp_Url + '?' + new URLSearchParams(vnp_Params).toString();
+    const finalUrl =
+      VNPAY_CONFIG.vnp_Url + '?' + new URLSearchParams(vnp_Params).toString();
 
     // Trả về kèm URL để FrontEnd redirect
     return { order, paymentUrl: finalUrl };

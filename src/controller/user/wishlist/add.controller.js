@@ -13,14 +13,22 @@ const add = async (req, res) => {
     res.status(201).json({
       success: true,
       data: wishlistItem,
-      message: 'Product added to wishlist successfully'
+      message: 'Product added to wishlist successfully',
     });
 
-    logger.info('Product added to wishlist successfully', { userId: req.userId, payload: req.body });
+    logger.info('Product added to wishlist successfully', {
+      userId: req.userId,
+      payload: req.body,
+    });
   } catch (error) {
     const status = error.status || 500;
     res.status(status).json({
-      code: status === 400 ? 'BadRequest' : (status === 404 ? 'NotFound' : 'ServerError'),
+      code:
+        status === 400
+          ? 'BadRequest'
+          : status === 404
+            ? 'NotFound'
+            : 'ServerError',
       message: error.message || 'Internal Server Error',
     });
 

@@ -24,7 +24,10 @@ const addService = async (userId, payload) => {
   }
 
   // 2. Chống spam: Tránh việc 1 User đánh giá 1 đôi giày quá 1 lần
-  const existingReview = await Review.findOne({ user_id: userId, product_id: product_id });
+  const existingReview = await Review.findOne({
+    user_id: userId,
+    product_id: product_id,
+  });
   if (existingReview) {
     // Nếu họ có đánh giá rồi thì cho phép sửa đánh giá luôn thay vì chặn
     existingReview.rating = rating;
@@ -40,7 +43,7 @@ const addService = async (userId, payload) => {
     product_id: product_id,
     rating: rating,
     comment: comment || '',
-    status: 'pending' // Mặc định phải chờ duyệt
+    status: 'pending', // Mặc định phải chờ duyệt
   });
 
   await newReview.save();

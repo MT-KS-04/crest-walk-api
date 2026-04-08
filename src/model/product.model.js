@@ -64,6 +64,10 @@ const productSchema = new Schema(
         message: 'Product must have at least one image',
       },
     },
+    publicIds: {
+      type: [String],
+      default: [],
+    },
     description: {
       type: String,
       default: '',

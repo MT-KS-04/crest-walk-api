@@ -16,22 +16,21 @@ const vnpayReturn = async (req, res) => {
       res.status(200).json({
         success: true,
         message: result.message,
-        orderId: result.orderId
+        orderId: result.orderId,
       });
       logger.info('VNPAY payment success', { orderId: result.orderId });
     } else {
       res.status(400).json({
         success: false,
         message: result.message,
-        orderId: result.orderId
+        orderId: result.orderId,
       });
     }
-
   } catch (error) {
     logger.error('VNPAY Return Error', error);
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };

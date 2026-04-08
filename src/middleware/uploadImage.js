@@ -27,6 +27,39 @@ const FOLDER_PRODUCT = 'crest-walk/products';
 // ─────────────────────────────────────────────
 const isOversized = (file) => file.size > MAX_FILE_SIZE;
 
+const isDataUrl = (value) =>
+  typeof value === 'string' && /^data:.*;base64,/.test(value);
+
+const getBase64Payload = (dataUrl) => {
+  const commaIndex = dataUrl.indexOf(',');
+  return commaIndex >= 0 ? dataUrl.slice(commaIndex + 1) : '';
+};
+
+const base64ByteLength = (base64) => {
+  if (!base64) return 0;
+  const padding = base64.endsWith('==') ? 2 : base64.endsWith('=') ? 1 : 0;
+  return Math.floor((base64.length * 3) / 4) - padding;
+};
+
+const normalizeStringArray = (value) => {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed) return [];
+    if (trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [value];
+      }
+    }
+    return [value];
+  }
+  return [];
+};
+
 // ─────────────────────────────────────────────
 // Middleware: Upload Banner Image
 // Dùng multer.single('image') ở route
@@ -109,28 +142,41 @@ const uploadBannerImage = (method) => {
 // ─────────────────────────────────────────────
 const uploadProductImages = (method) => {
   return async (req, res, next) => {
-    // PUT không bắt buộc phải có file
-    if (method === 'put' && (!req.files || req.files.length === 0)) {
+    const files = Array.isArray(req.files) ? req.files : [];
+    const bodyImages = normalizeStringArray(req.body?.images);
+    const hasFiles = files.length > 0;
+    const hasBodyImages = bodyImages.length > 0;
+
+    if (method === 'put' && !hasFiles && !hasBodyImages) {
       return next();
     }
 
-    if (!req.files || req.files.length === 0) {
+    if (!hasFiles && !hasBodyImages) {
       return res.status(400).json({
         code: 'ValidationError',
         message: 'At least one product image is required',
       });
     }
 
-    const oversizedFile = req.files.find(isOversized);
-    if (oversizedFile) {
-      return res.status(413).json({
+    if (hasFiles) {
+      const oversizedFile = files.find(isOversized);
+      if (oversizedFile) {
+        return res.status(413).json({
+          code: 'ValidationError',
+          message: 'Each image must be less than 2MB',
+        });
+      }
+    }
+
+    if (hasBodyImages && bodyImages.length > 10) {
+      return res.status(400).json({
         code: 'ValidationError',
-        message: 'Each image must be less than 2MB',
+        message: 'Maximum 10 images are allowed',
       });
     }
 
     try {
-      const { productId } = req.params;
+      const productId = req.params.productId || req.params.id;
 
       // Với PUT: lấy publicIds cũ (nếu muốn overwrite từng ảnh theo thứ tự)
       // Nếu số ảnh mới khác số cũ thì truyền undefined để Cloudinary tự sinh id mới
@@ -142,24 +188,53 @@ const uploadProductImages = (method) => {
         existingPublicIds = product?.publicIds || [];
       }
 
-      // Upload song song tất cả ảnh
-      const uploads = await Promise.all(
-        req.files.map((file, index) =>
-          uploadToCloudinary(
-            file.buffer,
-            existingPublicIds[index] || undefined, // overwrite nếu có, không thì tạo mới
-            FOLDER_PRODUCT,
+      if (hasFiles) {
+        const uploads = await Promise.all(
+          files.map((file, index) =>
+            uploadToCloudinary(
+              file.buffer,
+              existingPublicIds[index] || undefined,
+              FOLDER_PRODUCT,
+            ),
           ),
-        ),
-      );
+        );
 
-      // Map đúng field của product_model
-      req.body.images = uploads.map((data) => data.secure_url);
-      req.body.publicIds = uploads.map((data) => data.public_id);
+        req.body.images = uploads.map((data) => data.secure_url);
+        req.body.publicIds = uploads.map((data) => data.public_id);
+      } else {
+        const uploads = await Promise.all(
+          bodyImages.map((img, index) => {
+            if (!isDataUrl(img)) return null;
+            const base64 = getBase64Payload(img);
+            const bytes = base64ByteLength(base64);
+            if (bytes > MAX_FILE_SIZE) {
+              const err = new Error('Each image must be less than 2MB');
+              err.http_code = 413;
+              throw err;
+            }
+            const buffer = Buffer.from(base64, 'base64');
+            return uploadToCloudinary(
+              buffer,
+              existingPublicIds[index] || undefined,
+              FOLDER_PRODUCT,
+            );
+          }),
+        );
+
+        req.body.images = bodyImages.map((img, index) => {
+          const uploaded = uploads[index];
+          return uploaded ? uploaded.secure_url : img;
+        });
+
+        const publicIds = uploads.filter(Boolean).map((data) => data.public_id);
+        if (publicIds.length > 0) {
+          req.body.publicIds = publicIds;
+        }
+      }
 
       logger.info('Product images uploaded to Cloudinary', {
         productId,
-        count: uploads.length,
+        count: Array.isArray(req.body.images) ? req.body.images.length : 0,
         publicIds: req.body.publicIds,
       });
 

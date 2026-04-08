@@ -16,11 +16,19 @@ const add = async (req, res) => {
       message: 'Review submitted and is awaiting approval.',
     });
 
-    logger.info('Review submitted successfully', { userId: req.userId, productId: req.body.product_id });
+    logger.info('Review submitted successfully', {
+      userId: req.userId,
+      productId: req.body.product_id,
+    });
   } catch (error) {
     const status = error.status || 500;
     res.status(status).json({
-      code: status === 400 ? 'BadRequest' : (status === 404 ? 'NotFound' : 'ServerError'),
+      code:
+        status === 400
+          ? 'BadRequest'
+          : status === 404
+            ? 'NotFound'
+            : 'ServerError',
       message: error.message || 'Internal Server Error',
     });
 

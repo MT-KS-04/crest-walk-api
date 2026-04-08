@@ -34,7 +34,7 @@ const addService = async (userId, payload) => {
   // Thêm vào wishlist
   const newWishlistItem = new Wishlist({
     user_id: userId,
-    product_id
+    product_id,
   });
 
   await newWishlistItem.save();
