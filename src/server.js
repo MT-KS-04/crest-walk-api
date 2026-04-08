@@ -39,11 +39,11 @@ app.use(
   }),
 );
 
-// Enable json
-app.use(express.json());
+// Enable json with higher limit to support product images (base64/url payloads)
+app.use(express.json({ limit: '20mb' }));
 
 // Enable URL-encoded request body parsing with extended mode
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 
 // Init cookie
 app.use(cookieParser());

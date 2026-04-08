@@ -6,6 +6,7 @@
 import { Router } from 'express';
 import { body, param, query } from 'express-validator';
 import validationError from '../../middleware/validationError.js';
+import multer from 'multer';
 
 // Controllers
 import createBanner from '../../controller/admin/banner/createBanner.controller.js';
@@ -14,7 +15,13 @@ import getBannerById from '../../controller/admin/banner/getBannerById.controlle
 import updateBanner from '../../controller/admin/banner/updateBanner.controller.js';
 import deleteBanner from '../../controller/admin/banner/deleteBanner.controller.js';
 
+/**
+ * Middleware
+ */
+import { uploadBannerImage } from '../../middleware/uploadImage.js';
+
 const router = Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Thêm ảnh URL validator
 const isUrlOrPath = (value) => {
@@ -55,6 +62,8 @@ router.get(
 // Thêm mới banner
 router.post(
   '/',
+  upload.single('image'),
+  uploadBannerImage('post'),
   body('title').trim().notEmpty().withMessage('Banner title is required'),
   body('image_url')
     .trim()
@@ -87,6 +96,8 @@ router.post(
 router.put(
   '/:id',
   param('id').isMongoId().withMessage('Invalid Banner ID'),
+  upload.single('image'),
+  uploadBannerImage('put'),
   body('title')
     .optional()
     .trim()
