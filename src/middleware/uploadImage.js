@@ -35,7 +35,8 @@ const isOversized = (file) => file.size > MAX_FILE_SIZE;
 const uploadBannerImage = (method) => {
   return async (req, res, next) => {
     const hasImageUrl =
-      typeof req.body?.image_url === 'string' && req.body.image_url.trim() !== '';
+      typeof req.body?.image_url === 'string' &&
+      req.body.image_url.trim() !== '';
 
     // PUT không bắt buộc phải có file
     if (method === 'put' && !req.file) {
@@ -140,7 +141,7 @@ const uploadProductImages = (method) => {
     }
 
     try {
-      const { productId } = req.params;
+      const productId = req.params.id;
 
       // Với PUT: lấy publicIds cũ (nếu muốn overwrite từng ảnh theo thứ tự)
       // Nếu số ảnh mới khác số cũ thì truyền undefined để Cloudinary tự sinh id mới
