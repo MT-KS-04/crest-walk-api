@@ -37,6 +37,14 @@ const login = async (req, res) => {
 
     logger.info('User login successfully', user);
   } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode).json({
+        code: error.statusCode === 404 ? 'NotFound' : 'ValidationError',
+        message: error.message,
+      });
+      return;
+    }
+
     res.status(500).json({
       code: 'ServerError',
       message: 'Internal Server Error',

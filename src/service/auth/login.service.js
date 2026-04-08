@@ -17,16 +17,21 @@ import { generateAccessToken, generateRefreshToken } from '../../lib/jwt.js';
 
 const loginService = async (data) => {
   const user = await User.findOne({ email: data.email })
-    .select('username full_name email role')
+    .select('username full_name email role status')
     .lean()
     .exec();
 
   if (!user) {
-    res.status(404).json({
-      code: 'NotFound',
-      message: 'User not found',
-    });
-    return;
+    throw new Error('User not found');
+  }
+
+  if (user.status === 'blocked') {
+    const error = new Error(
+      'Your account has been blocked. Please contact support.',
+    );
+    error.code = 'AccountSuspended';
+    error.statusCode = 403;
+    throw error;
   }
 
   const accessToken = generateAccessToken(user._id);
