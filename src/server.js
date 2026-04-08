@@ -32,9 +32,16 @@ import routerV1 from './router/index.router.js';
 const app = express();
 
 // Init Cors
+const allowedOrigins = ['http://localhost:3001', 'http://localhost:3002'];
 app.use(
   cors({
-    origin: 'http://localhost:3001',
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   }),
 );

@@ -4,9 +4,10 @@
  */
 
 import Order from '../../../model/order.model.js';
+import Product from '../../../model/product.model.js';
 
 const detailService = async (userId, orderId) => {
-  const order = await Order.findById(orderId).lean();
+  const order = await Order.findById(orderId).populate('items.product_id', 'images').lean();
 
   if (!order) {
     const error = new Error('Order not found');
