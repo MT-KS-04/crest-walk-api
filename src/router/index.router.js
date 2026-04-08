@@ -21,6 +21,7 @@ import productRouter from './user/product.router.js';
 import cartRouter from './user/cart.router.js';
 import orderRouter from './user/order.router.js';
 import wishlistRouter from './user/wishlist.router.js';
+import paymentRouter from './user/payment.router.js';
 
 const router = Router();
 
@@ -48,5 +49,6 @@ router.use('/products', productRouter);
 router.use('/cart', authenticate, cartRouter);
 router.use('/orders', authenticate, orderRouter);
 router.use('/wishlist', authenticate, wishlistRouter);
+router.use('/payment', paymentRouter);
 
 export default router;

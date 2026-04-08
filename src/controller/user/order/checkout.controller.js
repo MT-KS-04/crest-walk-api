@@ -8,11 +8,13 @@ import checkoutService from '../../../service/user/order/checkout.service.js';
 
 const checkout = async (req, res) => {
   try {
-    const order = await checkoutService(req.userId, req.body);
+    const ipAddr = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const { order, paymentUrl } = await checkoutService(req.userId, req.body, ipAddr);
 
     res.status(201).json({
       success: true,
       data: order,
+      paymentUrl: paymentUrl, // Cố tình nhả link VNPAY cho FE
       message: 'Order placed successfully',
     });
 

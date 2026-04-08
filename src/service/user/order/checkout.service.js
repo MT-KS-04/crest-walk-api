@@ -6,8 +6,10 @@
 import Cart from '../../../model/cart.model.js';
 import Product from '../../../model/product.model.js';
 import Order from '../../../model/order.model.js';
+import crypto from 'crypto';
+import { sortObject, getVnpTime, VNPAY_CONFIG } from '../payment/vnpayUtils.js';
 
-const checkoutService = async (userId, payload) => {
+const checkoutService = async (userId, payload, reqIp) => {
   const { address, phone, payment_method } = payload;
 
   if (!address || !phone) {
@@ -92,7 +94,38 @@ const checkoutService = async (userId, payload) => {
   cart.items = [];
   await cart.save();
 
-  return order;
+  // 6. Xử lý VNPAY URL nếu chọn Online
+  if (method === 'Online') {
+    const ipAddr = reqIp || '127.0.0.1';
+    
+    let vnp_Params = {};
+    vnp_Params['vnp_Version'] = '2.1.0';
+    vnp_Params['vnp_Command'] = 'pay';
+    vnp_Params['vnp_TmnCode'] = VNPAY_CONFIG.vnp_TmnCode;
+    vnp_Params['vnp_Locale'] = 'vn';
+    vnp_Params['vnp_CurrCode'] = 'VND';
+    vnp_Params['vnp_TxnRef'] = order._id.toString();
+    vnp_Params['vnp_OrderInfo'] = `Thanh toan hoa don giay CrestWalk: ${order._id}`;
+    vnp_Params['vnp_OrderType'] = 'other';
+    vnp_Params['vnp_Amount'] = total_price * 100; // VNPAY nhận số tiền nhân 100
+    vnp_Params['vnp_ReturnUrl'] = VNPAY_CONFIG.vnp_ReturnUrl;
+    vnp_Params['vnp_IpAddr'] = ipAddr;
+    vnp_Params['vnp_CreateDate'] = getVnpTime();
+
+    vnp_Params = sortObject(vnp_Params);
+    
+    const signData = new URLSearchParams(vnp_Params).toString();
+    const hmac = crypto.createHmac('sha512', VNPAY_CONFIG.vnp_HashSecret);
+    const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
+    
+    vnp_Params['vnp_SecureHash'] = signed;
+    const finalUrl = VNPAY_CONFIG.vnp_Url + '?' + new URLSearchParams(vnp_Params).toString();
+
+    // Trả về kèm URL để FrontEnd redirect
+    return { order, paymentUrl: finalUrl };
+  }
+
+  return { order, paymentUrl: null };
 };
 
 export default checkoutService;
