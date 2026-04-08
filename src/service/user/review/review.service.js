@@ -6,27 +6,39 @@
 import Review from '../../../model/review.model.js';
 import Product from '../../../model/product.model.js';
 import Order from '../../../model/order.model.js';
+import User from '../../../model/user.model.js';
+import mongoose from 'mongoose';
 
 const reviewService = {
   /**
    * Tạo đánh giá mới và cập nhật rating sản phẩm
    */
   create: async (userId, productId, rating, comment) => {
-    // 1. Kiểm tra xem người dùng đã mua sản phẩm này và đơn hàng đã hoàn thành chưa
-    const hasPurchased = await Order.findOne({
-      user_id: userId,
-      status: 'delivered', // Đã giao hàng thành công mới được đánh giá
-      'items.product_id': productId,
-    });
+    // 0. Kiểm tra quyền Admin (Bypass cho testing)
+    const user = await User.findById(userId);
+    const isAdmin = user?.role === 'admin';
 
-    if (!hasPurchased) {
-      const error = new Error('You can only review products you have purchased and received.');
-      error.status = 403;
-      throw error;
+    if (!isAdmin) {
+      // 1. Kiểm tra xem người dùng đã mua sản phẩm này và đơn hàng đã hoàn thành chưa
+      const hasPurchased = await Order.findOne({
+        user_id: userId,
+        status: 'delivered', 
+        'items.product_id': new mongoose.Types.ObjectId(productId),
+      });
+
+      if (!hasPurchased) {
+        const error = new Error('You can only review products you have purchased and received.');
+        error.status = 403;
+        throw error;
+      }
     }
 
     // 2. Kiểm tra xem người dùng đã đánh giá sản phẩm này chưa
-    const existingReview = await Review.findOne({ user_id: userId, product_id: productId });
+    const existingReview = await Review.findOne({ 
+      user_id: userId, 
+      product_id: new mongoose.Types.ObjectId(productId) 
+    });
+    
     if (existingReview) {
       const error = new Error('You have already reviewed this product.');
       error.status = 400;
@@ -89,18 +101,30 @@ const reviewService = {
    * Kiểm tra quyền đánh giá (dành cho frontend)
    */
   canReview: async (userId, productId) => {
-    // Kiểm tra mua hàng
-    const hasPurchased = await Order.findOne({
-      user_id: userId,
-      status: 'delivered',
-      'items.product_id': productId,
-    });
+    try {
+      // 0. Bypass cho Admin
+      const user = await User.findById(userId);
+      if (user?.role === 'admin') return true;
 
-    if (!hasPurchased) return false;
+      // 1. Kiểm tra xem đã đánh giá chưa
+      const existingReview = await Review.findOne({ 
+        user_id: userId, 
+        product_id: new mongoose.Types.ObjectId(productId) 
+      });
+      if (existingReview) return false;
 
-    // Kiểm tra xem đã đánh giá chưa
-    const existingReview = await Review.findOne({ user_id: userId, product_id: productId });
-    return !existingReview; // Trả về true nếu chưa đánh giá
+      // 2. Kiểm tra mua hàng
+      const hasPurchased = await Order.findOne({
+        user_id: userId,
+        status: 'delivered',
+        'items.product_id': new mongoose.Types.ObjectId(productId),
+      });
+
+      return !!hasPurchased;
+    } catch (error) {
+      console.error('Error in canReview:', error);
+      return false;
+    }
   }
 };
 
