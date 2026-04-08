@@ -6,6 +6,7 @@
 import { Router } from 'express';
 import { body, param, query } from 'express-validator';
 import validationError from '../../middleware/validationError.js';
+import multer from 'multer';
 
 // Controllers will be imported here
 import createProduct from '../../controller/admin/product/createProduct.controller.js';
@@ -14,7 +15,13 @@ import getProductById from '../../controller/admin/product/getProductById.contro
 import updateProduct from '../../controller/admin/product/updateProduct.controller.js';
 import deleteProduct from '../../controller/admin/product/deleteProduct.controller.js';
 
+/**
+ * Middleware
+ */
+import { uploadProductImages } from '../../middleware/uploadImage.js';
+
 const router = Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Lấy danh sách sản phẩm
 router.get('/', getProducts);
@@ -22,6 +29,8 @@ router.get('/', getProducts);
 // Thêm mới sản phẩm
 router.post(
   '/',
+  upload.array('images', 10),
+  uploadProductImages('post'),
   body('name')
     .trim()
     .notEmpty()
@@ -55,6 +64,8 @@ router.put(
   '/:id',
   param('id').isMongoId().withMessage('Invalid Product ID'),
   // Add other field validations similar to post as optional
+  upload.array('images', 10),
+  uploadProductImages('put'),
   body('name')
     .optional()
     .trim()
