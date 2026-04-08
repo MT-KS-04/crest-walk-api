@@ -62,7 +62,7 @@ router.get(
 // Thêm mới banner
 router.post(
   '/',
-  upload.single('image'),
+  upload.single('image_url'),
   uploadBannerImage('post'),
   body('title').trim().notEmpty().withMessage('Banner title is required'),
   body('image_url')
@@ -96,7 +96,7 @@ router.post(
 router.put(
   '/:id',
   param('id').isMongoId().withMessage('Invalid Banner ID'),
-  upload.single('image'),
+  upload.single('image_url'),
   uploadBannerImage('put'),
   body('title')
     .optional()

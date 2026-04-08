@@ -34,8 +34,18 @@ const isOversized = (file) => file.size > MAX_FILE_SIZE;
 // ─────────────────────────────────────────────
 const uploadBannerImage = (method) => {
   return async (req, res, next) => {
+    const hasImageUrl =
+      typeof req.body?.image_url === 'string' && req.body.image_url.trim() !== '';
+
     // PUT không bắt buộc phải có file
     if (method === 'put' && !req.file) {
+      return next();
+    }
+
+    // POST: chấp nhận 1 trong 2 cách:
+    // - upload file (req.file)
+    // - gửi link/path qua body.image_url
+    if (method === 'post' && !req.file && hasImageUrl) {
       return next();
     }
 
@@ -54,7 +64,7 @@ const uploadBannerImage = (method) => {
     }
 
     try {
-      const { bannerId } = req.params;
+      const bannerId = req.params.bannerId || req.params.id;
 
       // Lấy publicId cũ để overwrite trên Cloudinary (tránh tạo file thừa)
       let existingPublicId;
