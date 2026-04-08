@@ -16,9 +16,12 @@ const router = Router();
 // Lấy danh sách tồn kho
 router.get(
   '/',
-  query('lowStock').optional().isBoolean().withMessage('lowStock must be a boolean'),
+  query('lowStock')
+    .optional()
+    .isBoolean()
+    .withMessage('lowStock must be a boolean'),
   validationError,
-  getInventory
+  getInventory,
 );
 
 // Cập nhật nhanh số lượng tồn kho theo Size
@@ -27,14 +30,16 @@ router.patch(
   param('productId').isMongoId().withMessage('Invalid Product ID'),
   param('size').isNumeric().withMessage('Size must be a number'),
   body('quantity')
-    .notEmpty().withMessage('Quantity is required')
-    .isNumeric().withMessage('Quantity must be a number'),
+    .notEmpty()
+    .withMessage('Quantity is required')
+    .isNumeric()
+    .withMessage('Quantity must be a number'),
   body('mode')
     .optional()
     .isIn(['set', 'inc'])
     .withMessage('Mode must be either set or inc'),
   validationError,
-  updateStock
+  updateStock,
 );
 
 export default router;

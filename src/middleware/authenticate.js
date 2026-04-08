@@ -44,8 +44,11 @@ const authenticate = async (req, res, next) => {
     const jwtPayload = verifyAccessToken(token);
 
     // Check if user is blocked
-    const user = await User.findById(jwtPayload.userId).select('status').lean().exec();
-    
+    const user = await User.findById(jwtPayload.userId)
+      .select('status')
+      .lean()
+      .exec();
+
     if (!user) {
       return res.status(401).json({
         code: 'AuthenticationError',

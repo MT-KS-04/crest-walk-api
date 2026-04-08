@@ -7,11 +7,11 @@ import Voucher from '../../../model/voucher.model.js';
 
 const getVouchersService = async (query = {}) => {
   const filter = {};
-  
+
   if (query.is_active !== undefined) {
     filter.is_active = query.is_active === 'true';
   }
-  
+
   if (query.search) {
     filter.code = { $regex: query.search, $options: 'i' };
   }

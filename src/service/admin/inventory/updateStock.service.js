@@ -17,7 +17,7 @@ const updateStockService = async (productId, size, quantity, mode = 'set') => {
   }
 
   // Check if size exists in the product
-  const sizeIndex = product.sizes.findIndex(s => s.size === sizeValue);
+  const sizeIndex = product.sizes.findIndex((s) => s.size === sizeValue);
   if (sizeIndex === -1) {
     const error = new Error(`Size ${sizeValue} not found for this product.`);
     error.statusCode = 404;
@@ -30,14 +30,14 @@ const updateStockService = async (productId, size, quantity, mode = 'set') => {
     updatedProduct = await Product.findOneAndUpdate(
       { _id: productId, 'sizes.size': sizeValue },
       { $inc: { 'sizes.$.quantity': quantityValue } },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     ).exec();
   } else {
     // Mode is 'set'
     updatedProduct = await Product.findOneAndUpdate(
       { _id: productId, 'sizes.size': sizeValue },
       { $set: { 'sizes.$.quantity': quantityValue } },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     ).exec();
   }
 

@@ -17,7 +17,7 @@ const getUserByIdService = async (id) => {
 
   // Optional: Add summary of order history
   const orderCount = await Order.countDocuments({ user_id: id });
-  
+
   return {
     ...user,
     stats: {

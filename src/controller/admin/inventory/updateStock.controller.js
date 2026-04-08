@@ -11,14 +11,21 @@ const updateStock = async (req, res) => {
     const { productId, size } = req.params;
     const { quantity, mode } = req.body;
 
-    const updatedProduct = await updateStockService(productId, size, quantity, mode);
+    const updatedProduct = await updateStockService(
+      productId,
+      size,
+      quantity,
+      mode,
+    );
 
     res.status(200).json({
       message: 'Stock updated successfully',
       data: updatedProduct,
     });
 
-    logger.info(`Stock updated for Product: ${productId}, Size: ${size}, Mode: ${mode || 'set'}, Qty: ${quantity}`);
+    logger.info(
+      `Stock updated for Product: ${productId}, Size: ${size}, Mode: ${mode || 'set'}, Qty: ${quantity}`,
+    );
   } catch (error) {
     if (error.statusCode) {
       res.status(error.statusCode).json({

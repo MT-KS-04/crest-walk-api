@@ -16,7 +16,9 @@ const updateVoucherService = async (id, data) => {
 
   // If updating code, check for uniqueness
   if (data.code !== undefined && data.code.toUpperCase() !== voucher.code) {
-    const existingVoucher = await Voucher.findOne({ code: data.code.toUpperCase() });
+    const existingVoucher = await Voucher.findOne({
+      code: data.code.toUpperCase(),
+    });
     if (existingVoucher) {
       const error = new Error('Voucher code already exists');
       error.statusCode = 409;
@@ -30,7 +32,7 @@ const updateVoucherService = async (id, data) => {
       ...data,
       code: data.code ? data.code.toUpperCase() : voucher.code,
     },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 
   return updatedVoucher;

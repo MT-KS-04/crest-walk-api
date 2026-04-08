@@ -7,7 +7,9 @@ import Voucher from '../../../model/voucher.model.js';
 
 const createVoucherService = async (data) => {
   // Check for uniqueness
-  const existingVoucher = await Voucher.findOne({ code: data.code.toUpperCase() });
+  const existingVoucher = await Voucher.findOne({
+    code: data.code.toUpperCase(),
+  });
 
   if (existingVoucher) {
     const error = new Error('Voucher code already exists');

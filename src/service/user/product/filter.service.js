@@ -7,7 +7,7 @@ import Product from '../../../model/product.model.js';
 
 const filterService = async (query) => {
   const { minPrice, maxPrice, size, brand, sortBy } = query;
-  
+
   const filter = {};
 
   if (minPrice || maxPrice) {
@@ -18,11 +18,11 @@ const filterService = async (query) => {
 
   if (size) {
     filter['sizes.size'] = Number(size);
-    filter['sizes.quantity'] = { $gt: 0 }; 
+    filter['sizes.quantity'] = { $gt: 0 };
   }
 
   if (brand) {
-    filter.brand_id = brand; 
+    filter.brand_id = brand;
   }
 
   let dbQuery = Product.find(filter)
@@ -40,7 +40,7 @@ const filterService = async (query) => {
       case 'newest':
         dbQuery = dbQuery.sort({ createdAt: -1 });
         break;
-      case 'rating': 
+      case 'rating':
         dbQuery = dbQuery.sort({ rating: -1 });
         break;
       default:
