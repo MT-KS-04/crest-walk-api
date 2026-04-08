@@ -14,6 +14,7 @@ import inventoryRouter from './inventory.router.js';
 import voucherRouter from './voucher.router.js';
 import statsRouter from './stats.router.js';
 import reviewRouter from './review.router.js';
+import bannerRouter from './banner.router.js';
 
 const router = Router();
 
@@ -27,5 +28,6 @@ router.use('/inventory', inventoryRouter);
 router.use('/stats', statsRouter);
 router.use('/vouchers', voucherRouter);
 router.use('/reviews', reviewRouter);
+router.use('/banners', bannerRouter);
 
 export default router;
